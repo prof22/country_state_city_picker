@@ -1,3 +1,4 @@
 authors:
-- Okoh O.Emmanuel<mine4christ@gmail.com><emmanuel.okoh@dafesoftware.com>,
+- creator <mine4christ@gmail.com>
+- contributor1 <emmanuel.okoh@dafesoftware.com>,
 - Orakpo Jefferson
