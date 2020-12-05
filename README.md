@@ -125,10 +125,5 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ### Special Thanks
 
-- Salvatore Giordano, CountryCodePicker [CountryCodePicker](https://github.com/imtoori/CountryCodePicker)
-- @tomrozb and @dev-fema for changelog 1.0.0+3
-- @giaotuancse for changelog 1.0.0+4
-- @joshuachinemezu for changelog 1.0.0+6 - 1.0.0+8
-- @u-gin for chaangelog 1.0.0+9
-- @imurnane for chaangelog 1.0.1+1
-- @jpainam for chaangelog 1.0.1+2
+- Darshan Gada, countries-states-cities-database [countries-states-cities-database](https://github.com/dr5hn/countries-states-cities-database)
+- Orakpo Jefferson(CEO, Dafesoftware Ltd)
