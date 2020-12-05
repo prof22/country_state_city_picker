@@ -1,5 +1,5 @@
 library country_state_city_picker;
-
+import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'model/select_status_model.dart' as StatusModel;
@@ -33,8 +33,9 @@ class _SelectStateState extends State<SelectState> {
   }
 
   Future getResponse() async{
-        var res =
-        await DefaultAssetBundle.of(context).loadString('asset/country.json');
+        var res = 
+        await rootBundle.loadString('packages/country_state_city_picker/lib/assets/country.json');
+        // await DefaultAssetBundle.of(context).loadString('assets/country.json');
        return jsonDecode(res);
   }
   Future getCounty() async {
