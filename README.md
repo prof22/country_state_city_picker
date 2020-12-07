@@ -3,18 +3,18 @@
 A flutter package for showing a country, states, and cities. In addition it gives the possibility to select a list of countries, States and Cities depends on Selected.
 
 <div style="text-align:center">
-<img src="https://github.com/prof22/country_state_city_picker/blob/main/screenshot/Screenshot2.jpg" width="240"/>
+<img src="Screenshot2.jpg" width="240"/>
 </div>
-<img src="https://github.com/prof22/country_state_city_picker/blob/main/screenshot/Screenshot3.jpg" width="240"/>
-<img src="https://github.com/prof22/country_state_city_picker/blob/main/screenshot/Screenshot4.jpg" width="240"/>
-<img src="https://github.com/prof22/country_state_city_picker/blob/main/screenshot/Screenshot5.jpg" width="240"/>
-<img src="https://github.com/prof22/country_state_city_picker/blob/main/screenshot/Screenshot6.jpg" width="240"/>
-<img src="https://github.com/prof22/country_state_city_picker/blob/main/screenshot/Screenshot7.jpg" width="240"/>
-<img src="https://github.com/prof22/country_state_city_picker/blob/main/screenshot/Screenshot1.jpg" width="240"/>
+<img src="Screenshot3.jpg" width="240"/>
+<img src="Screenshot4.jpg" width="240"/>
+<img src="Screenshot5.jpg" width="240"/>
+<img src="Screenshot6.jpg" width="240"/>
+<img src="Screenshot7.jpg" width="240"/>
+<img src="Screenshot1.jpg" width="240"/>
 
 ## Usage
 
-To use this plugin, add `country_state_city_picker` as a [dependency in your pubspec.yaml](https://flutter.io/platform-plugins/).
+To use this Package, add `country_state_city_picker` as a [dependency in your pubspec.yaml](https://flutter.io/platform-plugins/).
 
 ```dart
      SelectState(
