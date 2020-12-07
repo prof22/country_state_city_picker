@@ -38,25 +38,40 @@ class _SelectStateState extends State<SelectState> {
         // await DefaultAssetBundle.of(context).loadString('assets/country.json');
        return jsonDecode(res);
   }
-  Future getCounty() async {
+  // Future getCounty() async {
+         
+  //  var countryres = await getResponse() as List;
+  //   var takecountry = countryres
+  //       .map((map) => StatusModel.StatusModel.fromJson(map))
+  //       .map((item) => item.name)
+  //       .toList();
+  //   setState(() {
+  //     _country..addAll(takecountry);
+  //   });
+  //   return _country;
+  // }
+
+ Future getCounty() async {
          
    var countryres = await getResponse() as List;
-    var takecountry = countryres
-        .map((map) => StatusModel.StatusModel.fromJson(map))
-        .map((item) => item.name)
-        .toList();
-    setState(() {
-      _country..addAll(takecountry);
+   countryres.forEach((data) {
+     var model = StatusModel.StatusModel();
+     model.name = data['name'];
+     model.emoji = data['emoji'];
+      setState(() {
+      _country.add(model.emoji + "    " + model.name);
+      // _country..addAll(takecountry2);
     });
+   });
+   
     return _country;
   }
-
   Future getState() async {
     var response = await getResponse();
     var takestate = response
         .map((map) => StatusModel.StatusModel.fromJson(map))
         .where((item) => item.name == _selectedCountry)
-        .map((item) => item.states)
+        .map((item) => item.state)
         .toList();
     var states = takestate as List;
     states.forEach((f) {
@@ -78,12 +93,12 @@ class _SelectStateState extends State<SelectState> {
     var takestate = response
         .map((map) => StatusModel.StatusModel.fromJson(map))
         .where((item) => item.name == _selectedCountry)
-        .map((item) => item.states)
+        .map((item) => item.state)
         .toList();
     var states = takestate as List;
     states.forEach((f) {
       var name = f.where((item) => item.name == _selectedState);
-      var cityname = name.map((item) => item.cities).toList();
+      var cityname = name.map((item) => item.city).toList();
       cityname.forEach((ci) {
         setState(() {
           var citiesname = ci.map((item) => item.name).toList();
@@ -138,7 +153,11 @@ class _SelectStateState extends State<SelectState> {
             items: _country.map((String dropDownStringItem) {
               return DropdownMenuItem<String>(
                 value: dropDownStringItem,
-                child: Text(dropDownStringItem),
+                child: Row(
+                  children: [
+                    Text(dropDownStringItem)
+                  ],
+                ),
               );
             }).toList(),
             onChanged: (value) => _onSelectedCountry(value),

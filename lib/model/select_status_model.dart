@@ -1,35 +1,21 @@
 class StatusModel {
   int id;
   String name;
-  String iso3;
-  String iso2;
-  String phoneCode;
-  String capital;
-  String currency;
-  List<States> states;
+  String emoji;
+  String emojiU;
+  List<State> state;
 
-  StatusModel(
-      {this.id,
-      this.name,
-      this.iso3,
-      this.iso2,
-      this.phoneCode,
-      this.capital,
-      this.currency,
-      this.states});
+  StatusModel({this.id, this.name, this.emoji, this.emojiU, this.state});
 
   StatusModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    iso3 = json['iso3'];
-    iso2 = json['iso2'];
-    phoneCode = json['phone_code'];
-    capital = json['capital'];
-    currency = json['currency'];
-    if (json['states'] != null) {
-      states = new List<States>();
-      json['states'].forEach((v) {
-        states.add(new States.fromJson(v));
+    emoji = json['emoji'];
+    emojiU = json['emojiU'];
+    if (json['state'] != null) {
+      state = new List<State>();
+      json['state'].forEach((v) {
+        state.add(new State.fromJson(v));
       });
     }
   }
@@ -38,34 +24,31 @@ class StatusModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    data['iso3'] = this.iso3;
-    data['iso2'] = this.iso2;
-    data['phone_code'] = this.phoneCode;
-    data['capital'] = this.capital;
-    data['currency'] = this.currency;
-    if (this.states != null) {
-      data['states'] = this.states.map((v) => v.toJson()).toList();
+    data['emoji'] = this.emoji;
+    data['emojiU'] = this.emojiU;
+    if (this.state != null) {
+      data['state'] = this.state.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class States {
+class State {
   int id;
   String name;
-  String stateCode;
-  List<Cities> cities;
+  int countryId;
+  List<City> city;
 
-  States({this.id, this.name, this.stateCode, this.cities});
+  State({this.id, this.name, this.countryId, this.city});
 
-  States.fromJson(Map<String, dynamic> json) {
+  State.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    stateCode = json['state_code'];
-    if (json['cities'] != null) {
-      cities = new List<Cities>();
-      json['cities'].forEach((v) {
-        cities.add(new Cities.fromJson(v));
+    countryId = json['country_id'];
+    if (json['city'] != null) {
+      city = new List<City>();
+      json['city'].forEach((v) {
+        city.add(new City.fromJson(v));
       });
     }
   }
@@ -74,29 +57,32 @@ class States {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    data['state_code'] = this.stateCode;
-    if (this.cities != null) {
-      data['cities'] = this.cities.map((v) => v.toJson()).toList();
+    data['country_id'] = this.countryId;
+    if (this.city != null) {
+      data['city'] = this.city.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class Cities {
+class City {
   int id;
   String name;
+  int stateId;
 
-  Cities({this.id, this.name});
+  City({this.id, this.name, this.stateId});
 
-  Cities.fromJson(Map<String, dynamic> json) {
+  City.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    stateId = json['state_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
+    data['state_id'] = this.stateId;
     return data;
   }
 }
