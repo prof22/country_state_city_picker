@@ -70,7 +70,7 @@ class _SelectStateState extends State<SelectState> {
     var response = await getResponse();
     var takestate = response
         .map((map) => StatusModel.StatusModel.fromJson(map))
-        .where((item) => item.name == _selectedCountry)
+        .where((item) => item.emoji + "    " + item.name == _selectedCountry)
         .map((item) => item.state)
         .toList();
     var states = takestate as List;
@@ -92,7 +92,7 @@ class _SelectStateState extends State<SelectState> {
     var response = await getResponse();
     var takestate = response
         .map((map) => StatusModel.StatusModel.fromJson(map))
-        .where((item) => item.name == _selectedCountry)
+        .where((item) => item.emoji + "    " + item.name == _selectedCountry)
         .map((item) => item.state)
         .toList();
     var states = takestate as List;
