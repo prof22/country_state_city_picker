@@ -3,14 +3,14 @@
 A flutter package for showing a country, states, and cities. In addition it gives the possibility to select a list of countries, States and Cities depends on Selected.
 
 <div style="text-align:center">
-<img src="Screenshot2.jpg" width="240"/>
+<img src="https://raw.githubusercontent.com/prof22/country_state_city_picker/main/screenshot/Screenshot2.jpg" width="240"/>
 </div>
-<img src="Screenshot3.jpg" width="240"/>
-<img src="Screenshot4.jpg" width="240"/>
-<img src="Screenshot5.jpg" width="240"/>
-<img src="Screenshot6.jpg" width="240"/>
-<img src="Screenshot7.jpg" width="240"/>
-<img src="Screenshot1.jpg" width="240"/>
+<img src="https://raw.githubusercontent.com/prof22/country_state_city_picker/main/screenshot/Screenshot3.jpg" width="240"/>
+<img src="https://raw.githubusercontent.com/prof22/country_state_city_picker/main/screenshot/Screenshot4.jpg" width="240"/>
+<img src="https://raw.githubusercontent.com/prof22/country_state_city_picker/main/screenshot/Screenshot5.jpg" width="240"/>
+<img src="https://raw.githubusercontent.com/prof22/country_state_city_picker/main/screenshot/Screenshot6.jpg" width="240"/>
+<img src="https://raw.githubusercontent.com/prof22/country_state_city_picker/main/screenshot/Screenshot7.jpg" width="240"/>
+<img src="https://raw.githubusercontent.com/prof22/country_state_city_picker/main/screenshot/Screenshot1.jpg" width="240"/>
 
 ## Usage
 
