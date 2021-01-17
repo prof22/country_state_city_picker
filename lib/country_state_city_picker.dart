@@ -38,18 +38,7 @@ class _SelectStateState extends State<SelectState> {
         // await DefaultAssetBundle.of(context).loadString('assets/country.json');
        return jsonDecode(res);
   }
-  // Future getCounty() async {
-         
-  //  var countryres = await getResponse() as List;
-  //   var takecountry = countryres
-  //       .map((map) => StatusModel.StatusModel.fromJson(map))
-  //       .map((item) => item.name)
-  //       .toList();
-  //   setState(() {
-  //     _country..addAll(takecountry);
-  //   });
-  //   return _country;
-  // }
+
 
  Future getCounty() async {
          
