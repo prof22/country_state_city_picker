@@ -9,9 +9,16 @@ class SelectState extends StatefulWidget {
   final ValueChanged<String> onCountryChanged;
   final ValueChanged<String> onStateChanged;
   final ValueChanged<String> onCityChanged;
+  final TextStyle style;
+  final Color dropdownColor;
 
   const SelectState(
-      {Key key, this.onCountryChanged, this.onStateChanged, this.onCityChanged})
+      {Key key,
+      this.onCountryChanged,
+      this.onStateChanged,
+      this.onCityChanged,
+      this.style,
+      this.dropdownColor})
       : super(key: key);
 
   @override
@@ -36,7 +43,6 @@ class _SelectStateState extends State<SelectState> {
   Future getResponse() async {
     var res = await rootBundle.loadString(
         'packages/country_state_city_picker/lib/assets/country.json');
-    // await DefaultAssetBundle.of(context).loadString('assets/country.json');
     return jsonDecode(res);
   }
 
@@ -49,7 +55,6 @@ class _SelectStateState extends State<SelectState> {
       if (!mounted) return;
       setState(() {
         _country.add(model.emoji + "    " + model.name);
-        // _country..addAll(takecountry2);
       });
     });
 
@@ -94,7 +99,6 @@ class _SelectStateState extends State<SelectState> {
         if (!mounted) return;
         setState(() {
           var citiesname = ci.map((item) => item.name).toList();
-          //  print(citiesname);
           for (var citynames in citiesname) {
             print(citynames.toString());
 
@@ -139,16 +143,21 @@ class _SelectStateState extends State<SelectState> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      // crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         DropdownButton<String>(
+          dropdownColor: widget.dropdownColor,
           isExpanded: true,
           items: _country.map((String dropDownStringItem) {
             return DropdownMenuItem<String>(
               value: dropDownStringItem,
               child: Row(
-                children: [Text(dropDownStringItem)],
+                children: [
+                  Text(
+                    dropDownStringItem,
+                    style: widget.style,
+                  )
+                ],
               ),
             );
           }).toList(),
@@ -156,26 +165,26 @@ class _SelectStateState extends State<SelectState> {
           value: _selectedCountry,
         ),
         DropdownButton<String>(
+          dropdownColor: widget.dropdownColor,
           isExpanded: true,
           items: _states.map((String dropDownStringItem) {
             return DropdownMenuItem<String>(
               value: dropDownStringItem,
-              child: Text(dropDownStringItem),
+              child: Text(dropDownStringItem, style: widget.style),
             );
           }).toList(),
-          // onChanged: (value) => print(value),
           onChanged: (value) => _onSelectedState(value),
           value: _selectedState,
         ),
         DropdownButton<String>(
+          dropdownColor: widget.dropdownColor,
           isExpanded: true,
           items: _cities.map((String dropDownStringItem) {
             return DropdownMenuItem<String>(
               value: dropDownStringItem,
-              child: Text(dropDownStringItem),
+              child: Text(dropDownStringItem, style: widget.style),
             );
           }).toList(),
-          // onChanged: (value) => print(value),
           onChanged: (value) => _onSelectedCity(value),
           value: _selectedCity,
         ),
