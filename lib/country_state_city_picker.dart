@@ -5,12 +5,21 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'model/select_status_model.dart' as StatusModel;
 
+enum Layout {
+  vertical,
+  horizontal
+}
+
 class SelectState extends StatefulWidget {
   final ValueChanged<String> onCountryChanged;
   final ValueChanged<String> onStateChanged;
   final ValueChanged<String> onCityChanged;
   final TextStyle style;
+  final bool showFlag;
+  final Layout layout;
   final Color dropdownColor;
+
+
 
   const SelectState(
       {Key key,
@@ -18,6 +27,8 @@ class SelectState extends StatefulWidget {
       this.onStateChanged,
       this.onCityChanged,
       this.style,
+      this.showFlag = true,
+      this.layout = Layout.vertical,
       this.dropdownColor})
       : super(key: key);
 
@@ -54,7 +65,7 @@ class _SelectStateState extends State<SelectState> {
       model.emoji = data['emoji'];
       if (!mounted) return;
       setState(() {
-        _country.add(model.emoji + "    " + model.name);
+        widget.showFlag ?_country.add(model.emoji + "    " + model.name) : _country.add(model.name);
       });
     });
 
@@ -142,7 +153,57 @@ class _SelectStateState extends State<SelectState> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return widget.layout==Layout.vertical?Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        DropdownButton<String>(
+          dropdownColor: widget.dropdownColor,
+          isExpanded: true,
+          items: _country.map((String dropDownStringItem) {
+            return DropdownMenuItem<String>(
+              value: dropDownStringItem,
+              child: Row(
+                children: [
+                  Text(
+                    dropDownStringItem,
+                    style: widget.style,
+                  )
+                ],
+              ),
+            );
+          }).toList(),
+          onChanged: (value) => _onSelectedCountry(value),
+          value: _selectedCountry,
+        ),
+        DropdownButton<String>(
+          dropdownColor: widget.dropdownColor,
+          isExpanded: true,
+          items: _states.map((String dropDownStringItem) {
+            return DropdownMenuItem<String>(
+              value: dropDownStringItem,
+              child: Text(dropDownStringItem, style: widget.style),
+            );
+          }).toList(),
+          onChanged: (value) => _onSelectedState(value),
+          value: _selectedState,
+        ),
+        DropdownButton<String>(
+          dropdownColor: widget.dropdownColor,
+          isExpanded: true,
+          items: _cities.map((String dropDownStringItem) {
+            return DropdownMenuItem<String>(
+              value: dropDownStringItem,
+              child: Text(dropDownStringItem, style: widget.style),
+            );
+          }).toList(),
+          onChanged: (value) => _onSelectedCity(value),
+          value: _selectedCity,
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+      ],
+    ):Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         DropdownButton<String>(
