@@ -15,12 +15,12 @@ class SelectState extends StatefulWidget {
   final Color? dropdownColor;
 
   const SelectState(
-      {required Key key,
-        required this.onCountryChanged,
-        required this.onStateChanged,
-        required this.onCityChanged,
-        this.style,
-        this.dropdownColor})
+      {Key? key,
+      required this.onCountryChanged,
+      required this.onStateChanged,
+      required this.onCityChanged,
+      this.style,
+      this.dropdownColor})
       : super(key: key);
 
   @override
