@@ -1,9 +1,9 @@
 class StatusModel {
-  int id;
-  String name;
-  String emoji;
-  String emojiU;
-  List<State> state;
+  int? id;
+  String? name;
+  String? emoji;
+  String? emojiU;
+  List<State>? state;
 
   StatusModel({this.id, this.name, this.emoji, this.emojiU, this.state});
 
@@ -13,9 +13,9 @@ class StatusModel {
     emoji = json['emoji'];
     emojiU = json['emojiU'];
     if (json['state'] != null) {
-      state = new List<State>();
+      state = <State>[];
       json['state'].forEach((v) {
-        state.add(new State.fromJson(v));
+        state!.add(new State.fromJson(v));
       });
     }
   }
@@ -27,17 +27,17 @@ class StatusModel {
     data['emoji'] = this.emoji;
     data['emojiU'] = this.emojiU;
     if (this.state != null) {
-      data['state'] = this.state.map((v) => v.toJson()).toList();
+      data['state'] = this.state!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class State {
-  int id;
-  String name;
-  int countryId;
-  List<City> city;
+  int? id;
+  String? name;
+  int? countryId;
+  List<City>? city;
 
   State({this.id, this.name, this.countryId, this.city});
 
@@ -46,9 +46,9 @@ class State {
     name = json['name'];
     countryId = json['country_id'];
     if (json['city'] != null) {
-      city = new List<City>();
+      city = <City>[];
       json['city'].forEach((v) {
-        city.add(new City.fromJson(v));
+        city!.add(new City.fromJson(v));
       });
     }
   }
@@ -59,16 +59,16 @@ class State {
     data['name'] = this.name;
     data['country_id'] = this.countryId;
     if (this.city != null) {
-      data['city'] = this.city.map((v) => v.toJson()).toList();
+      data['city'] = this.city!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class City {
-  int id;
-  String name;
-  int stateId;
+  int? id;
+  String? name;
+  int? stateId;
 
   City({this.id, this.name, this.stateId});
 
