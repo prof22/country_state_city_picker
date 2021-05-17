@@ -1,22 +1,24 @@
-library country_state_city_picker;
+library country_state_city_picker_nona;
 
-import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
 import 'model/select_status_model.dart' as StatusModel;
 
 class SelectState extends StatefulWidget {
   final ValueChanged<String> onCountryChanged;
   final ValueChanged<String> onStateChanged;
   final ValueChanged<String> onCityChanged;
-  final TextStyle style;
-  final Color dropdownColor;
+  final TextStyle? style;
+  final Color? dropdownColor;
 
   const SelectState(
-      {Key key,
-      this.onCountryChanged,
-      this.onStateChanged,
-      this.onCityChanged,
+      {Key? key,
+      required this.onCountryChanged,
+      required this.onStateChanged,
+      required this.onCityChanged,
       this.style,
       this.dropdownColor})
       : super(key: key);
@@ -54,7 +56,7 @@ class _SelectStateState extends State<SelectState> {
       model.emoji = data['emoji'];
       if (!mounted) return;
       setState(() {
-        _country.add(model.emoji + "    " + model.name);
+        _country.add(model.emoji! + "    " + model.name!);
       });
     });
 
@@ -161,7 +163,7 @@ class _SelectStateState extends State<SelectState> {
               ),
             );
           }).toList(),
-          onChanged: (value) => _onSelectedCountry(value),
+          onChanged: (value) => _onSelectedCountry(value!),
           value: _selectedCountry,
         ),
         DropdownButton<String>(
@@ -173,7 +175,7 @@ class _SelectStateState extends State<SelectState> {
               child: Text(dropDownStringItem, style: widget.style),
             );
           }).toList(),
-          onChanged: (value) => _onSelectedState(value),
+          onChanged: (value) => _onSelectedState(value!),
           value: _selectedState,
         ),
         DropdownButton<String>(
@@ -185,7 +187,7 @@ class _SelectStateState extends State<SelectState> {
               child: Text(dropDownStringItem, style: widget.style),
             );
           }).toList(),
-          onChanged: (value) => _onSelectedCity(value),
+          onChanged: (value) => _onSelectedCity(value!),
           value: _selectedCity,
         ),
         SizedBox(
