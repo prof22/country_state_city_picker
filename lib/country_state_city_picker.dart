@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'model/select_status_model.dart' as StatusModel;
+import 'package:diacritic/diacritic.dart';
 
 class SelectState extends StatefulWidget {
   final ValueChanged<String> onCountryChanged;
@@ -52,7 +53,7 @@ class _SelectStateState extends State<SelectState> {
     var countryres = await getResponse() as List;
     countryres.forEach((data) {
       var model = StatusModel.StatusModel();
-      model.name = data['name'];
+      model.name = removeDiacritics(data['name']);
       model.emoji = data['emoji'];
       if (!mounted) return;
       setState(() {
@@ -171,8 +172,9 @@ class _SelectStateState extends State<SelectState> {
           isExpanded: true,
           items: _states.map((String dropDownStringItem) {
             return DropdownMenuItem<String>(
-              value: dropDownStringItem,
-              child: Text(dropDownStringItem, style: widget.style),
+              value: removeDiacritics(dropDownStringItem),
+              child: Text(removeDiacritics(dropDownStringItem),
+                  style: widget.style),
             );
           }).toList(),
           onChanged: (value) => _onSelectedState(value!),
@@ -183,8 +185,9 @@ class _SelectStateState extends State<SelectState> {
           isExpanded: true,
           items: _cities.map((String dropDownStringItem) {
             return DropdownMenuItem<String>(
-              value: dropDownStringItem,
-              child: Text(dropDownStringItem, style: widget.style),
+              value: removeDiacritics(dropDownStringItem),
+              child: Text(removeDiacritics(dropDownStringItem),
+                  style: widget.style),
             );
           }).toList(),
           onChanged: (value) => _onSelectedCity(value!),
