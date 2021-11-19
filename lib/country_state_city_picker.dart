@@ -14,9 +14,9 @@ class SelectState extends StatefulWidget {
   final ValueChanged<String> onCityChanged;
   final TextStyle? style;
   final Color? dropdownColor;
-  String defaultCountry;
-  String defaultCity;
-  String defaultState;
+  String? defaultCountry;
+  String? defaultCity;
+  String? defaultState;
 
   SelectState({
     Key? key,
@@ -25,9 +25,9 @@ class SelectState extends StatefulWidget {
     required this.onCityChanged,
     this.style,
     this.dropdownColor,
-    required this.defaultCity,
-    required this.defaultCountry,
-    required this.defaultState,
+    this.defaultCity,
+    this.defaultCountry,
+    this.defaultState,
   }) : super(key: key);
 
   @override
@@ -37,12 +37,17 @@ class SelectState extends StatefulWidget {
 class _SelectStateState extends State<SelectState> {
   List<String> _cities = ["Choose City"];
   List<String> _country = ["Choose Country"];
-
+  String _selectedCity = "Choose City";
+  String _selectedCountry = "Choose Country";
+  String _selectedState = "Choose State";
   List<String> _states = ["Choose State"];
   var responses;
 
   @override
   void initState() {
+    _selectedCity = widget.defaultCity ?? "Choose City";
+    _selectedCountry = widget.defaultCountry ?? "Choose Country";
+    _selectedState = widget.defaultState ?? "Choose State";
     getCounty();
     super.initState();
   }
@@ -72,8 +77,7 @@ class _SelectStateState extends State<SelectState> {
     var response = await getResponse();
     var takestate = response
         .map((map) => StatusModel.StatusModel.fromJson(map))
-        .where(
-            (item) => item.emoji + "    " + item.name == widget.defaultCountry)
+        .where((item) => item.emoji + "    " + item.name == _selectedCountry)
         .map((item) => item.state)
         .toList();
     var states = takestate as List;
@@ -96,13 +100,12 @@ class _SelectStateState extends State<SelectState> {
     var response = await getResponse();
     var takestate = response
         .map((map) => StatusModel.StatusModel.fromJson(map))
-        .where(
-            (item) => item.emoji + "    " + item.name == widget.defaultCountry)
+        .where((item) => item.emoji + "    " + item.name == _selectedCountry)
         .map((item) => item.state)
         .toList();
     var states = takestate as List;
     states.forEach((f) {
-      var name = f.where((item) => item.name == widget.defaultState);
+      var name = f.where((item) => item.name == _selectedState);
       var cityname = name.map((item) => item.city).toList();
       cityname.forEach((ci) {
         if (!mounted) return;
@@ -122,9 +125,9 @@ class _SelectStateState extends State<SelectState> {
   void _onSelectedCountry(String value) {
     if (!mounted) return;
     setState(() {
-      widget.defaultState = "Choose State";
+      _selectedState = "Choose State";
       _states = ["Choose State"];
-      widget.defaultCountry = value;
+      _selectedCountry = value;
       this.widget.onCountryChanged(value);
       getState();
     });
@@ -133,9 +136,9 @@ class _SelectStateState extends State<SelectState> {
   void _onSelectedState(String value) {
     if (!mounted) return;
     setState(() {
-      widget.defaultCity = "Choose City";
+      _selectedCity = "Choose City";
       _cities = ["Choose City"];
-      widget.defaultState = value;
+      _selectedState = value;
       this.widget.onStateChanged(value);
       getCity();
     });
@@ -144,7 +147,7 @@ class _SelectStateState extends State<SelectState> {
   void _onSelectedCity(String value) {
     if (!mounted) return;
     setState(() {
-      widget.defaultCity = value;
+      _selectedCity = value;
       this.widget.onCityChanged(value);
     });
   }
@@ -171,7 +174,7 @@ class _SelectStateState extends State<SelectState> {
             );
           }).toList(),
           onChanged: (value) => _onSelectedCountry(value!),
-          value: widget.defaultCountry,
+          value: _selectedCountry,
         ),
         DropdownButton<String>(
           dropdownColor: widget.dropdownColor,
@@ -184,7 +187,7 @@ class _SelectStateState extends State<SelectState> {
             );
           }).toList(),
           onChanged: (value) => _onSelectedState(value!),
-          value: widget.defaultState,
+          value: _selectedState,
         ),
         DropdownButton<String>(
           dropdownColor: widget.dropdownColor,
@@ -197,7 +200,7 @@ class _SelectStateState extends State<SelectState> {
             );
           }).toList(),
           onChanged: (value) => _onSelectedCity(value!),
-          value: widget.defaultCity,
+          value: _selectedCity,
         ),
         SizedBox(
           height: 10.0,
