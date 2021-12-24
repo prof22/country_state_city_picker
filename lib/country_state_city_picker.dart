@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'model/select_status_model.dart' as StatusModel;
+import 'package:diacritic/diacritic.dart';
 
 class SelectState extends StatefulWidget {
   final ValueChanged<String> onCountryChanged;
@@ -13,15 +14,21 @@ class SelectState extends StatefulWidget {
   final ValueChanged<String> onCityChanged;
   final TextStyle? style;
   final Color? dropdownColor;
+  String? defaultCountry;
+  String? defaultCity;
+  String? defaultState;
 
-  const SelectState(
-      {Key? key,
-      required this.onCountryChanged,
-      required this.onStateChanged,
-      required this.onCityChanged,
-      this.style,
-      this.dropdownColor})
-      : super(key: key);
+  SelectState({
+    Key? key,
+    required this.onCountryChanged,
+    required this.onStateChanged,
+    required this.onCityChanged,
+    this.style,
+    this.dropdownColor,
+    this.defaultCity,
+    this.defaultCountry,
+    this.defaultState,
+  }) : super(key: key);
 
   @override
   _SelectStateState createState() => _SelectStateState();
@@ -38,6 +45,9 @@ class _SelectStateState extends State<SelectState> {
 
   @override
   void initState() {
+    _selectedCity = widget.defaultCity ?? "Choose City";
+    _selectedCountry = widget.defaultCountry ?? "Choose Country";
+    _selectedState = widget.defaultState ?? "Choose State";
     getCounty();
     super.initState();
   }
@@ -52,7 +62,7 @@ class _SelectStateState extends State<SelectState> {
     var countryres = await getResponse() as List;
     countryres.forEach((data) {
       var model = StatusModel.StatusModel();
-      model.name = data['name'];
+      model.name = removeDiacritics(data['name']);
       model.emoji = data['emoji'];
       if (!mounted) return;
       setState(() {
@@ -171,8 +181,9 @@ class _SelectStateState extends State<SelectState> {
           isExpanded: true,
           items: _states.map((String dropDownStringItem) {
             return DropdownMenuItem<String>(
-              value: dropDownStringItem,
-              child: Text(dropDownStringItem, style: widget.style),
+              value: removeDiacritics(dropDownStringItem),
+              child: Text(removeDiacritics(dropDownStringItem),
+                  style: widget.style),
             );
           }).toList(),
           onChanged: (value) => _onSelectedState(value!),
@@ -183,8 +194,9 @@ class _SelectStateState extends State<SelectState> {
           isExpanded: true,
           items: _cities.map((String dropDownStringItem) {
             return DropdownMenuItem<String>(
-              value: dropDownStringItem,
-              child: Text(dropDownStringItem, style: widget.style),
+              value: removeDiacritics(dropDownStringItem),
+              child: Text(removeDiacritics(dropDownStringItem),
+                  style: widget.style),
             );
           }).toList(),
           onChanged: (value) => _onSelectedCity(value!),
