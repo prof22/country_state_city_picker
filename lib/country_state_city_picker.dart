@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'model/select_status_model.dart' as StatusModel;
-import 'package:diacritic/diacritic.dart';
 
 class SelectState extends StatefulWidget {
   final ValueChanged<String> onCountryChanged;
@@ -14,21 +13,20 @@ class SelectState extends StatefulWidget {
   final ValueChanged<String> onCityChanged;
   final TextStyle? style;
   final Color? dropdownColor;
-  String? defaultCountry;
-  String? defaultCity;
-  String? defaultState;
+  final InputDecoration decoration;
+  final double spacing;
 
-  SelectState({
-    Key? key,
-    required this.onCountryChanged,
-    required this.onStateChanged,
-    required this.onCityChanged,
-    this.style,
-    this.dropdownColor,
-    this.defaultCity,
-    this.defaultCountry,
-    this.defaultState,
-  }) : super(key: key);
+  const SelectState(
+      {Key? key,
+      required this.onCountryChanged,
+      required this.onStateChanged,
+      required this.onCityChanged,
+      this.decoration =
+          const InputDecoration(contentPadding: EdgeInsets.all(0.0)),
+      this.spacing = 0.0,
+      this.style,
+      this.dropdownColor})
+      : super(key: key);
 
   @override
   _SelectStateState createState() => _SelectStateState();
@@ -45,9 +43,6 @@ class _SelectStateState extends State<SelectState> {
 
   @override
   void initState() {
-    _selectedCity = widget.defaultCity ?? "Choose City";
-    _selectedCountry = widget.defaultCountry ?? "Choose Country";
-    _selectedState = widget.defaultState ?? "Choose State";
     getCounty();
     super.initState();
   }
@@ -62,7 +57,7 @@ class _SelectStateState extends State<SelectState> {
     var countryres = await getResponse() as List;
     countryres.forEach((data) {
       var model = StatusModel.StatusModel();
-      model.name = removeDiacritics(data['name']);
+      model.name = data['name'];
       model.emoji = data['emoji'];
       if (!mounted) return;
       setState(() {
@@ -157,53 +152,80 @@ class _SelectStateState extends State<SelectState> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        DropdownButton<String>(
-          dropdownColor: widget.dropdownColor,
-          isExpanded: true,
-          items: _country.map((String dropDownStringItem) {
-            return DropdownMenuItem<String>(
-              value: dropDownStringItem,
-              child: Row(
-                children: [
-                  Text(
-                    dropDownStringItem,
-                    style: widget.style,
-                  )
-                ],
-              ),
-            );
-          }).toList(),
-          onChanged: (value) => _onSelectedCountry(value!),
-          value: _selectedCountry,
-        ),
-        DropdownButton<String>(
-          dropdownColor: widget.dropdownColor,
-          isExpanded: true,
-          items: _states.map((String dropDownStringItem) {
-            return DropdownMenuItem<String>(
-              value: removeDiacritics(dropDownStringItem),
-              child: Text(removeDiacritics(dropDownStringItem),
-                  style: widget.style),
-            );
-          }).toList(),
-          onChanged: (value) => _onSelectedState(value!),
-          value: _selectedState,
-        ),
-        DropdownButton<String>(
-          dropdownColor: widget.dropdownColor,
-          isExpanded: true,
-          items: _cities.map((String dropDownStringItem) {
-            return DropdownMenuItem<String>(
-              value: removeDiacritics(dropDownStringItem),
-              child: Text(removeDiacritics(dropDownStringItem),
-                  style: widget.style),
-            );
-          }).toList(),
-          onChanged: (value) => _onSelectedCity(value!),
-          value: _selectedCity,
+        InputDecorator(
+          decoration: widget.decoration,
+          child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+            dropdownColor: widget.dropdownColor,
+            isExpanded: true,
+            items: _country.map((String dropDownStringItem) {
+              return DropdownMenuItem<String>(
+                value: dropDownStringItem,
+                child: Row(
+                  children: [
+                    Text(
+                      dropDownStringItem,
+                      style: widget.style,
+                    )
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (value) => _onSelectedCountry(value!),
+            value: _selectedCountry,
+          )),
         ),
         SizedBox(
-          height: 10.0,
+          height: widget.spacing,
+        ),
+        InputDecorator(
+          decoration: widget.decoration,
+          child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+            dropdownColor: widget.dropdownColor,
+            isExpanded: true,
+            items: _states.map((String dropDownStringItem) {
+              return DropdownMenuItem<String>(
+                value: dropDownStringItem,
+                child: Row(
+                  children: [
+                    Text(
+                      dropDownStringItem,
+                      style: widget.style,
+                    )
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (value) => _onSelectedState(value!),
+            value: _selectedState,
+          )),
+        ),
+        SizedBox(
+          height: widget.spacing,
+        ),
+        InputDecorator(
+          decoration: widget.decoration,
+          child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+            dropdownColor: widget.dropdownColor,
+            isExpanded: true,
+            items: _cities.map((String dropDownStringItem) {
+              return DropdownMenuItem<String>(
+                value: dropDownStringItem,
+                child: Row(
+                  children: [
+                    Text(
+                      dropDownStringItem,
+                      style: widget.style,
+                    )
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (value) => _onSelectedCity(value!),
+            value: _selectedCity,
+          )),
         ),
       ],
     );

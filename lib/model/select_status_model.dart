@@ -1,5 +1,3 @@
-import 'package:diacritic/diacritic.dart';
-
 class StatusModel {
   int? id;
   String? name;
@@ -11,7 +9,7 @@ class StatusModel {
 
   StatusModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = removeDiacritics(json['name']);
+    name = json['name'];
     emoji = json['emoji'];
     emojiU = json['emojiU'];
     if (json['state'] != null) {
@@ -45,7 +43,7 @@ class State {
 
   State.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = removeDiacritics(json['name']);
+    name = json['name'];
     countryId = json['country_id'];
     if (json['city'] != null) {
       city = <City>[];
@@ -76,7 +74,7 @@ class City {
 
   City.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = removeDiacritics(json['name']);
+    name = json['name'];
     stateId = json['state_id'];
   }
 
