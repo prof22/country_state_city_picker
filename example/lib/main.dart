@@ -30,6 +30,11 @@ class _MyHomePageState extends State<MyHomePage> {
   String? countryValue;
   String? stateValue;
   String? cityValue;
+
+  void displayMsg(msg) {
+    print(msg);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,16 +59,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     countryValue = value;
                   });
                 },
+                onCountryTap: () => displayMsg('You\'ve tapped on countries!'),
                 onStateChanged: (value) {
                   setState(() {
                     stateValue = value;
                   });
                 },
+                onStateTap: () => displayMsg('You\'ve tapped on states!'),
                 onCityChanged: (value) {
                   setState(() {
                     cityValue = value;
                   });
                 },
+                onCityTap: () => displayMsg('You\'ve tapped on cities!'),
               ),
               // InkWell(
               //     onTap: () {

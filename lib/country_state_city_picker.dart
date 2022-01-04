@@ -11,6 +11,9 @@ class SelectState extends StatefulWidget {
   final ValueChanged<String> onCountryChanged;
   final ValueChanged<String> onStateChanged;
   final ValueChanged<String> onCityChanged;
+  final VoidCallback? onCountryTap;
+  final VoidCallback? onStateTap;
+  final VoidCallback? onCityTap;
   final TextStyle? style;
   final Color? dropdownColor;
   final InputDecoration decoration;
@@ -25,7 +28,10 @@ class SelectState extends StatefulWidget {
           const InputDecoration(contentPadding: EdgeInsets.all(0.0)),
       this.spacing = 0.0,
       this.style,
-      this.dropdownColor})
+      this.dropdownColor,
+      this.onCountryTap,
+      this.onStateTap,
+      this.onCityTap})
       : super(key: key);
 
   @override
@@ -37,8 +43,8 @@ class _SelectStateState extends State<SelectState> {
   List<String> _country = ["Choose Country"];
   String _selectedCity = "Choose City";
   String _selectedCountry = "Choose Country";
-  String _selectedState = "Choose State";
-  List<String> _states = ["Choose State"];
+  String _selectedState = "Choose State/Province";
+  List<String> _states = ["Choose State/Province"];
   var responses;
 
   @override
@@ -174,7 +180,10 @@ class _SelectStateState extends State<SelectState> {
                 ),
               );
             }).toList(),
+            // onTap: ,
             onChanged: (value) => _onSelectedCountry(value!),
+            onTap: widget.onCountryTap,
+            // onChanged: (value) => _onSelectedCountry(value!),
             value: _selectedCountry,
           )),
         ),
@@ -204,6 +213,7 @@ class _SelectStateState extends State<SelectState> {
               );
             }).toList(),
             onChanged: (value) => _onSelectedState(value!),
+            onTap: widget.onStateTap,
             value: _selectedState,
           )),
         ),
@@ -233,6 +243,7 @@ class _SelectStateState extends State<SelectState> {
               );
             }).toList(),
             onChanged: (value) => _onSelectedCity(value!),
+            onTap: widget.onCityTap,
             value: _selectedCity,
           )),
         ),
