@@ -4,7 +4,8 @@
 ## [1.2.5] - 2021/01/17
 ## [1.2.6] - 2021/01/29
 ## [1.2.7] - 2021/02/05
-## [1.2.8] - 2021/12/24
+## [1.0.0] - 2021/12/24
+## [1.0.1] - 2022/01/04
 
 
 * initial release.
@@ -15,3 +16,4 @@
 * 1.2.7: Updated the dropdown list text and background to be customizable through the additional "style" 
          and "dropdownColor" properties.
 * 1.0.0: Added support for customizing dropdown button style and spacing between buttons. Null Safety included
+* 1.0.1: State changed to  State/Province, textOverflow solved

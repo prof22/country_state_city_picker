@@ -120,8 +120,8 @@ class _SelectStateState extends State<SelectState> {
   void _onSelectedCountry(String value) {
     if (!mounted) return;
     setState(() {
-      _selectedState = "Choose State";
-      _states = ["Choose State"];
+      _selectedState = "Choose  State/Province";
+      _states = ["Choose  State/Province"];
       _selectedCountry = value;
       this.widget.onCountryChanged(value);
       getState();
@@ -163,9 +163,12 @@ class _SelectStateState extends State<SelectState> {
                 value: dropDownStringItem,
                 child: Row(
                   children: [
-                    Text(
-                      dropDownStringItem,
-                      style: widget.style,
+                    Flexible(
+                      child: Text(
+                        dropDownStringItem,
+                        style: widget.style,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     )
                   ],
                 ),
@@ -189,9 +192,12 @@ class _SelectStateState extends State<SelectState> {
                 value: dropDownStringItem,
                 child: Row(
                   children: [
-                    Text(
-                      dropDownStringItem,
-                      style: widget.style,
+                    Flexible(
+                      child: Text(
+                        dropDownStringItem,
+                        style: widget.style,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     )
                   ],
                 ),
@@ -215,9 +221,12 @@ class _SelectStateState extends State<SelectState> {
                 value: dropDownStringItem,
                 child: Row(
                   children: [
-                    Text(
-                      dropDownStringItem,
-                      style: widget.style,
+                    Flexible(
+                      child: Text(
+                        dropDownStringItem,
+                        style: widget.style,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     )
                   ],
                 ),
