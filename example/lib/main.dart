@@ -59,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     countryValue = value;
                   });
                 },
+
                 onCountryTap: () => displayMsg('You\'ve tapped on countries!'),
                 onStateChanged: (value) {
                   setState(() {

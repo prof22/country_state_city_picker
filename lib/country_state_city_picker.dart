@@ -180,6 +180,7 @@ class _SelectStateState extends State<SelectState> {
             // onTap: ,
             onChanged: (value) => _onSelectedCountry(value!),
             onTap: widget.onCountryTap,
+            onChanged: (value) => _onSelectedCountry(value!),
             value: _selectedCountry,
           )),
         ),
