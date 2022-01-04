@@ -14,4 +14,4 @@
          called when the Widget has been disposed.
 * 1.2.7: Updated the dropdown list text and background to be customizable through the additional "style" 
          and "dropdownColor" properties.
-* 1.2.8: Added support for customizing dropdown button style and spacing between buttons.
+* 1.0.0: Added support for customizing dropdown button style and spacing between buttons. Null Safety included
