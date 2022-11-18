@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-
+import 'package:dropdown_search/dropdown_search.dart';
 import 'model/select_status_model.dart' as StatusModel;
 
 class SelectState extends StatefulWidget {
@@ -158,94 +158,122 @@ class _SelectStateState extends State<SelectState> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        InputDecorator(
-          decoration: widget.decoration,
-          child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-            dropdownColor: widget.dropdownColor,
-            isExpanded: true,
-            items: _country.map((String dropDownStringItem) {
-              return DropdownMenuItem<String>(
-                value: dropDownStringItem,
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        dropDownStringItem,
-                        style: widget.style,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )
-                  ],
-                ),
-              );
-            }).toList(),
-            // onTap: ,
-            onChanged: (value) => _onSelectedCountry(value!),
-            onTap: widget.onCountryTap,
-            // onChanged: (value) => _onSelectedCountry(value!),
-            value: _selectedCountry,
-          )),
+        DropdownSearch<String>(
+          items: _country,
+          dropdownBuilder: (context, selectedItem) {
+            return Container(
+                child: selectedItem != null
+                    ? Text(
+                        selectedItem,
+                        style: TextStyle(
+                          color: Color(0xff0F1031),
+                          fontSize: 11,
+                        ),
+                      )
+                    : null);
+          },
+          popupProps: PopupProps.menu(
+            disabledItemFn: (value) => value == "Choose Country",
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(autofocus: true),
+            // showSelectedItems: true,
+          ),
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+                labelStyle: TextStyle(color: Colors.grey, fontSize: 11),
+                label: Text('Choose Country'),
+                contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xffBBC2C9))),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xff0F1031))),
+                floatingLabelBehavior: FloatingLabelBehavior.auto),
+          ),
+          onChanged: (value) => _onSelectedCountry(value!),
         ),
         SizedBox(
           height: widget.spacing,
         ),
-        InputDecorator(
-          decoration: widget.decoration,
-          child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-            dropdownColor: widget.dropdownColor,
-            isExpanded: true,
-            items: _states.map((String dropDownStringItem) {
-              return DropdownMenuItem<String>(
-                value: dropDownStringItem,
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        dropDownStringItem,
-                        style: widget.style,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )
-                  ],
-                ),
-              );
-            }).toList(),
-            onChanged: (value) => _onSelectedState(value!),
-            onTap: widget.onStateTap,
-            value: _selectedState,
-          )),
+        DropdownSearch<String>(
+          items: _states,
+          dropdownBuilder: (context, selectedItem) {
+            return Container(
+                child: selectedItem != null
+                    ? Text(
+                        selectedItem,
+                        style: TextStyle(
+                          color: Color(0xff0F1031),
+                          fontSize: 11,
+                        ),
+                      )
+                    : null);
+          },
+          popupProps: PopupProps.menu(
+            disabledItemFn: (value) => value == "Choose  State/Province",
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(autofocus: true),
+            // showSelectedItems: true,
+          ),
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+                labelStyle: TextStyle(color: Colors.grey, fontSize: 11),
+                label: Text('Choose  State/Province'),
+                contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xffBBC2C9))),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xff0F1031))),
+                floatingLabelBehavior: FloatingLabelBehavior.auto),
+          ),
+          onChanged: (value) => _onSelectedState(value!),
         ),
         SizedBox(
           height: widget.spacing,
         ),
-        InputDecorator(
-          decoration: widget.decoration,
-          child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-            dropdownColor: widget.dropdownColor,
-            isExpanded: true,
-            items: _cities.map((String dropDownStringItem) {
-              return DropdownMenuItem<String>(
-                value: dropDownStringItem,
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        dropDownStringItem,
-                        style: widget.style,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )
-                  ],
-                ),
-              );
-            }).toList(),
-            onChanged: (value) => _onSelectedCity(value!),
-            onTap: widget.onCityTap,
-            value: _selectedCity,
-          )),
+        DropdownSearch<String>(
+          items: _cities,
+          dropdownBuilder: (context, selectedItem) {
+            return Container(
+                child: selectedItem != null
+                    ? Text(
+                        selectedItem,
+                        style: TextStyle(
+                          color: Color(0xff0F1031),
+                          fontSize: 11,
+                        ),
+                      )
+                    : null);
+          },
+          popupProps: PopupProps.menu(
+            disabledItemFn: (value) => value == "Choose City",
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(autofocus: true),
+            // showSelectedItems: true,
+          ),
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+                labelStyle: TextStyle(color: Colors.grey, fontSize: 11),
+                label: Text('Choose City'),
+                contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xffBBC2C9))),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xff0F1031))),
+                floatingLabelBehavior: FloatingLabelBehavior.auto),
+          ),
+          onChanged: (value) => _onSelectedCity(value!),
         ),
       ],
     );
