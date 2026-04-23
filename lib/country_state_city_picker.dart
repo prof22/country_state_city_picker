@@ -3,278 +3,336 @@ library country_state_city_picker_nona;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:dropdown_search/dropdown_search.dart';
-import 'model/select_status_model.dart' as StatusModel;
+import 'model/select_status_model.dart' as status_model;
+
+enum PickerType { material, cupertino, adaptive }
 
 class SelectState extends StatefulWidget {
-  final ValueChanged<String> onCountryChanged;
-  final ValueChanged<String> onStateChanged;
-  final ValueChanged<String> onCityChanged;
-  final VoidCallback? onCountryTap;
-  final VoidCallback? onStateTap;
-  final VoidCallback? onCityTap;
+  final ValueChanged<String>? onCountryChanged;
+  final ValueChanged<String>? onStateChanged;
+  final ValueChanged<String>? onCityChanged;
+
+  /// Callback that returns the selected country model
+  final ValueChanged<status_model.StatusModel>? onCountrySelected;
+
+  /// Callback that returns the selected state model
+  final ValueChanged<status_model.State>? onStateSelected;
+
+  /// Callback that returns the selected city model
+  final ValueChanged<status_model.City>? onCitySelected;
+
   final TextStyle? style;
+  final TextStyle? hintStyle;
   final Color? dropdownColor;
-  final InputDecoration decoration;
+  final InputDecoration? decoration;
   final double spacing;
 
-  const SelectState(
-      {Key? key,
-      required this.onCountryChanged,
-      required this.onStateChanged,
-      required this.onCityChanged,
-      this.decoration =
-          const InputDecoration(contentPadding: EdgeInsets.all(0.0)),
-      this.spacing = 0.0,
-      this.style,
-      this.dropdownColor,
-      this.onCountryTap,
-      this.onStateTap,
-      this.onCityTap})
-      : super(key: key);
+  /// Initial selected values
+  final String? defaultValue;
+  final String? defaultState;
+  final String? defaultCity;
+
+  /// Custom hints
+  final String countryHint;
+  final String stateHint;
+  final String cityHint;
+
+  /// Visibility controls
+  final bool hideCountry;
+  final bool hideState;
+  final bool hideCity;
+  final bool showFlag;
+
+  /// Search configuration
+  final bool showSearch;
+
+  /// Picker style: material, cupertino, or adaptive
+  final PickerType pickerType;
+
+  const SelectState({
+    Key? key,
+    this.onCountryChanged,
+    this.onStateChanged,
+    this.onCityChanged,
+    this.onCountrySelected,
+    this.onStateSelected,
+    this.onCitySelected,
+    this.decoration,
+    this.spacing = 10.0,
+    this.style,
+    this.hintStyle,
+    this.dropdownColor,
+    this.defaultValue,
+    this.defaultState,
+    this.defaultCity,
+    this.countryHint = "Choose Country",
+    this.stateHint = "Choose State/Province",
+    this.cityHint = "Choose City",
+    this.hideCountry = false,
+    this.hideState = false,
+    this.hideCity = false,
+    this.showFlag = true,
+    this.showSearch = true,
+    this.pickerType = PickerType.material,
+  }) : super(key: key);
 
   @override
   _SelectStateState createState() => _SelectStateState();
 }
 
 class _SelectStateState extends State<SelectState> {
-  List<String> _cities = ["Choose City"];
-  List<String> _country = ["Choose Country"];
-  String _selectedCity = "Choose City";
-  String _selectedCountry = "Choose Country";
-  String _selectedState = "Choose State/Province";
-  List<String> _states = ["Choose State/Province"];
-  var responses;
+  List<status_model.StatusModel> _allCountries = [];
+  List<status_model.State> _states = [];
+  List<status_model.City> _cities = [];
+
+  status_model.StatusModel? _selectedCountry;
+  status_model.State? _selectedState;
+  status_model.City? _selectedCity;
+
+  bool _isLoading = true;
 
   @override
   void initState() {
-    getCounty();
     super.initState();
+    _loadData();
   }
 
-  Future getResponse() async {
-    var res = await rootBundle.loadString(
-        'packages/country_state_city_picker/lib/assets/country.json');
-    return jsonDecode(res);
-  }
+  Future<void> _loadData() async {
+    try {
+      var res = await rootBundle.loadString(
+          'packages/country_state_city_picker/lib/assets/country.json');
+      List<dynamic> data = jsonDecode(res);
+      _allCountries =
+          data.map((item) => status_model.StatusModel.fromJson(item)).toList();
 
-  Future getCounty() async {
-    var countryres = await getResponse() as List;
-    countryres.forEach((data) {
-      var model = StatusModel.StatusModel();
-      model.name = data['name'];
-      model.emoji = data['emoji'];
-      if (!mounted) return;
-      setState(() {
-        _country.add(model.emoji! + "    " + model.name!);
-      });
-    });
+      if (widget.defaultValue != null) {
+        try {
+          _selectedCountry = _allCountries.firstWhere(
+            (c) =>
+                c.name == widget.defaultValue ||
+                (widget.showFlag &&
+                    "${c.emoji}    ${c.name}" == widget.defaultValue),
+          );
+          _states = _selectedCountry?.state ?? [];
 
-    return _country;
-  }
+          if (widget.defaultState != null) {
+            _selectedState = _states.firstWhere(
+              (s) => s.name == widget.defaultState,
+            );
+            _cities = _selectedState?.city ?? [];
 
-  Future getState() async {
-    var response = await getResponse();
-    var takestate = response
-        .map((map) => StatusModel.StatusModel.fromJson(map))
-        .where((item) => item.emoji + "    " + item.name == _selectedCountry)
-        .map((item) => item.state)
-        .toList();
-    var states = takestate as List;
-    states.forEach((f) {
-      if (!mounted) return;
-      setState(() {
-        var name = f.map((item) => item.name).toList();
-        for (var statename in name) {
-          print(statename.toString());
-
-          _states.add(statename.toString());
-        }
-      });
-    });
-
-    return _states;
-  }
-
-  Future getCity() async {
-    var response = await getResponse();
-    var takestate = response
-        .map((map) => StatusModel.StatusModel.fromJson(map))
-        .where((item) => item.emoji + "    " + item.name == _selectedCountry)
-        .map((item) => item.state)
-        .toList();
-    var states = takestate as List;
-    states.forEach((f) {
-      var name = f.where((item) => item.name == _selectedState);
-      var cityname = name.map((item) => item.city).toList();
-      cityname.forEach((ci) {
-        if (!mounted) return;
-        setState(() {
-          var citiesname = ci.map((item) => item.name).toList();
-          for (var citynames in citiesname) {
-            print(citynames.toString());
-
-            _cities.add(citynames.toString());
+            if (widget.defaultCity != null) {
+              _selectedCity = _cities.firstWhere(
+                (c) => c.name == widget.defaultCity,
+              );
+            }
           }
+        } catch (_) {
+          // If default value not found, just leave as null
+        }
+      }
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
         });
-      });
-    });
-    return _cities;
+      }
+    } catch (e) {
+      debugPrint("Error loading country data: $e");
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
-  void _onSelectedCountry(String value) {
-    if (!mounted) return;
+  void _onCountryChanged(status_model.StatusModel? value) {
+    if (value == null) return;
     setState(() {
-      _selectedState = "Choose  State/Province";
-      _states = ["Choose  State/Province"];
       _selectedCountry = value;
-      this.widget.onCountryChanged(value);
-      getState();
+      _states = value.state ?? [];
+      _selectedState = null;
+      _cities = [];
+      _selectedCity = null;
     });
+
+    final displayString =
+        widget.showFlag ? "${value.emoji}    ${value.name}" : value.name ?? "";
+    widget.onCountryChanged?.call(displayString);
+    widget.onCountrySelected?.call(value);
+
+    // Reset state and city in parent
+    widget.onStateChanged?.call("");
+    widget.onCityChanged?.call("");
   }
 
-  void _onSelectedState(String value) {
-    if (!mounted) return;
+  void _onStateChanged(status_model.State? value) {
+    if (value == null) return;
     setState(() {
-      _selectedCity = "Choose City";
-      _cities = ["Choose City"];
       _selectedState = value;
-      this.widget.onStateChanged(value);
-      getCity();
+      _cities = value.city ?? [];
+      _selectedCity = null;
     });
+    widget.onStateChanged?.call(value.name ?? "");
+    widget.onStateSelected?.call(value);
+
+    // Reset city in parent
+    widget.onCityChanged?.call("");
   }
 
-  void _onSelectedCity(String value) {
-    if (!mounted) return;
+  void _onCityChanged(status_model.City? value) {
+    if (value == null) return;
     setState(() {
       _selectedCity = value;
-      this.widget.onCityChanged(value);
     });
+    widget.onCityChanged?.call(value.name ?? "");
+    widget.onCitySelected?.call(value);
+  }
+
+  DropDownDecoratorProps _getDecoratorProps(String hint) {
+    return DropDownDecoratorProps(
+      decoration: (widget.decoration ?? const InputDecoration()).copyWith(
+        labelText: hint,
+        hintText: hint,
+        labelStyle: widget.hintStyle ??
+            const TextStyle(color: Colors.grey, fontSize: 14),
+        hintStyle: widget.hintStyle ??
+            const TextStyle(color: Colors.grey, fontSize: 14),
+        contentPadding: const EdgeInsets.fromLTRB(12, 12, 0, 12),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+  }
+
+  Widget _buildDropdown<T>({
+    required BuildContext context,
+    required List<T> items,
+    required String Function(T) itemAsString,
+    required T? selectedItem,
+    required void Function(T?) onSelected,
+    required String hint,
+    required String searchHint,
+    bool enabled = true,
+  }) {
+    final materialTextFieldProps = TextFieldProps(
+      decoration: InputDecoration(
+        hintText: searchHint,
+        prefixIcon: const Icon(Icons.search),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+
+    final cupertinoTextFieldProps = CupertinoTextFieldProps(
+      placeholder: searchHint,
+      prefix: const Padding(
+        padding: EdgeInsets.only(left: 8.0),
+        child: Icon(CupertinoIcons.search, size: 20),
+      ),
+    );
+
+    final decoratorProps = _getDecoratorProps(hint);
+
+    switch (widget.pickerType) {
+      case PickerType.cupertino:
+        return CupertinoDropdownSearch<T>(
+          items: (filter, loadProps) => items,
+          itemAsString: itemAsString,
+          selectedItem: selectedItem,
+          onSelected: onSelected,
+          enabled: enabled,
+          popupProps: CupertinoPopupProps<T>.menu(
+            showSearchBox: widget.showSearch,
+            searchFieldProps: cupertinoTextFieldProps,
+          ),
+          decoratorProps: decoratorProps,
+        );
+      case PickerType.adaptive:
+        return AdaptiveDropdownSearch<T>(
+          context: context,
+          items: (filter, loadProps) => items,
+          itemAsString: itemAsString,
+          selectedItem: selectedItem,
+          onSelected: onSelected,
+          enabled: enabled,
+          popupProps: AdaptivePopupProps<T>(
+            materialProps: PopupProps<T>.menu(
+              showSearchBox: widget.showSearch,
+              searchFieldProps: materialTextFieldProps,
+            ),
+            cupertinoProps: CupertinoPopupProps<T>.menu(
+              showSearchBox: widget.showSearch,
+              searchFieldProps: cupertinoTextFieldProps,
+            ),
+          ),
+          decoratorProps: decoratorProps,
+        );
+      case PickerType.material:
+        return DropdownSearch<T>(
+          items: (filter, loadProps) => items,
+          itemAsString: itemAsString,
+          selectedItem: selectedItem,
+          onSelected: onSelected,
+          enabled: enabled,
+          popupProps: PopupProps<T>.menu(
+            showSearchBox: widget.showSearch,
+            searchFieldProps: materialTextFieldProps,
+          ),
+          decoratorProps: decoratorProps,
+        );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
+
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        DropdownSearch<String>(
-          items: _country,
-          dropdownBuilder: (context, selectedItem) {
-            return Container(
-                child: selectedItem != null
-                    ? Text(
-                        selectedItem,
-                        style: TextStyle(
-                          color: Color(0xff0F1031),
-                          fontSize: 11,
-                        ),
-                      )
-                    : null);
-          },
-          popupProps: PopupProps.menu(
-            disabledItemFn: (value) => value == "Choose Country",
-            showSearchBox: true,
-            searchFieldProps: TextFieldProps(autofocus: true),
-            // showSelectedItems: true,
+      children: [
+        if (!widget.hideCountry) ...[
+          _buildDropdown<status_model.StatusModel>(
+            context: context,
+            items: _allCountries,
+            itemAsString: (item) => widget.showFlag
+                ? "${item.emoji}    ${item.name}"
+                : item.name ?? "",
+            selectedItem: _selectedCountry,
+            onSelected: _onCountryChanged,
+            hint: widget.countryHint,
+            searchHint: "Search country...",
           ),
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: InputDecoration(
-                labelStyle: TextStyle(color: Colors.grey, fontSize: 11),
-                label: Text('Choose Country'),
-                contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xffBBC2C9))),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xff0F1031))),
-                floatingLabelBehavior: FloatingLabelBehavior.auto),
+          SizedBox(height: widget.spacing),
+        ],
+        if (!widget.hideState) ...[
+          _buildDropdown<status_model.State>(
+            context: context,
+            items: _states,
+            itemAsString: (item) => item.name ?? "",
+            selectedItem: _selectedState,
+            onSelected: _onStateChanged,
+            hint: widget.stateHint,
+            searchHint: "Search state...",
+            enabled: _selectedCountry != null,
           ),
-          onChanged: (value) => _onSelectedCountry(value!),
-        ),
-        SizedBox(
-          height: widget.spacing,
-        ),
-        DropdownSearch<String>(
-          items: _states,
-          dropdownBuilder: (context, selectedItem) {
-            return Container(
-                child: selectedItem != null
-                    ? Text(
-                        selectedItem,
-                        style: TextStyle(
-                          color: Color(0xff0F1031),
-                          fontSize: 11,
-                        ),
-                      )
-                    : null);
-          },
-          popupProps: PopupProps.menu(
-            disabledItemFn: (value) => value == "Choose  State/Province",
-            showSearchBox: true,
-            searchFieldProps: TextFieldProps(autofocus: true),
-            // showSelectedItems: true,
+          SizedBox(height: widget.spacing),
+        ],
+        if (!widget.hideCity) ...[
+          _buildDropdown<status_model.City>(
+            context: context,
+            items: _cities,
+            itemAsString: (item) => item.name ?? "",
+            selectedItem: _selectedCity,
+            onSelected: _onCityChanged,
+            hint: widget.cityHint,
+            searchHint: "Search city...",
+            enabled: _selectedState != null,
           ),
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: InputDecoration(
-                labelStyle: TextStyle(color: Colors.grey, fontSize: 11),
-                label: Text('Choose  State/Province'),
-                contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xffBBC2C9))),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xff0F1031))),
-                floatingLabelBehavior: FloatingLabelBehavior.auto),
-          ),
-          onChanged: (value) => _onSelectedState(value!),
-        ),
-        SizedBox(
-          height: widget.spacing,
-        ),
-        DropdownSearch<String>(
-          items: _cities,
-          dropdownBuilder: (context, selectedItem) {
-            return Container(
-                child: selectedItem != null
-                    ? Text(
-                        selectedItem,
-                        style: TextStyle(
-                          color: Color(0xff0F1031),
-                          fontSize: 11,
-                        ),
-                      )
-                    : null);
-          },
-          popupProps: PopupProps.menu(
-            disabledItemFn: (value) => value == "Choose City",
-            showSearchBox: true,
-            searchFieldProps: TextFieldProps(autofocus: true),
-            // showSelectedItems: true,
-          ),
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: InputDecoration(
-                labelStyle: TextStyle(color: Colors.grey, fontSize: 11),
-                label: Text('Choose City'),
-                contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xffBBC2C9))),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xff0F1031))),
-                floatingLabelBehavior: FloatingLabelBehavior.auto),
-          ),
-          onChanged: (value) => _onSelectedCity(value!),
-        ),
+        ],
       ],
     );
   }

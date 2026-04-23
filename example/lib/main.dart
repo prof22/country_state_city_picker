@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:country_state_city_picker/country_state_city_picker.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,16 +15,18 @@ class MyApp extends StatelessWidget {
       title: 'Country State and City Picker',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        useMaterial3: true,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -31,57 +34,79 @@ class _MyHomePageState extends State<MyHomePage> {
   String? stateValue;
   String? cityValue;
 
-  void displayMsg(msg) {
-    print(msg);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Country State and City Picker'),
+        title: const Text('Country State and City Picker'),
+        elevation: 2,
       ),
-      body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          height: 600,
-          child: Column(
-            children: [
-              SizedBox(height: 30.0),
-              SelectState(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4.0))),
-                    contentPadding: EdgeInsets.all(5.0)),
-                spacing: 25.0,
-                onCountryChanged: (value) {
-                  setState(() {
-                    countryValue = value;
-                  });
-                },
-                onCountryTap: () => displayMsg('You\'ve tapped on countries!'),
-                onStateChanged: (value) {
-                  setState(() {
-                    stateValue = value;
-                  });
-                },
-                onStateTap: () => displayMsg('You\'ve tapped on states!'),
-                onCityChanged: (value) {
-                  setState(() {
-                    cityValue = value;
-                  });
-                },
-                onCityTap: () => displayMsg('You\'ve tapped on cities!'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Adaptive Picker",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            SelectState(
+              pickerType: PickerType.adaptive,
+              onCountryChanged: (value) {
+                setState(() {
+                  countryValue = value;
+                });
+              },
+              onStateChanged: (value) {
+                setState(() {
+                  stateValue = value;
+                });
+              },
+              onCityChanged: (value) {
+                setState(() {
+                  cityValue = value;
+                });
+              },
+            ),
+            const SizedBox(height: 30),
+            const Text(
+              "Custom Decoration & Initial Value",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            SelectState(
+              defaultValue: "United States",
+              defaultState: "California",
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.blue.withOpacity(0.1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
               ),
-              // InkWell(
-              //     onTap: () {
-              //       print('country selected is $countryValue');
-              //       print('country selected is $stateValue');
-              //       print('country selected is $cityValue');
-              //     },
-              //     child: Text(' Check'))
-            ],
-          )),
+              onCountryChanged: (value) {},
+              onStateChanged: (value) {},
+              onCityChanged: (value) {},
+            ),
+            const SizedBox(height: 30),
+            if (countryValue != null)
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text("Country: $countryValue"),
+                      Text("State: $stateValue"),
+                      Text("City: $cityValue"),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
