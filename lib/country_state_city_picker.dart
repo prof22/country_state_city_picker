@@ -212,6 +212,7 @@ class _SelectStateState extends State<SelectState> {
     required BuildContext context,
     required List<T> items,
     required String Function(T) itemAsString,
+    required bool Function(T, T) compareFn,
     required T? selectedItem,
     required void Function(T?) onSelected,
     required String hint,
@@ -241,6 +242,7 @@ class _SelectStateState extends State<SelectState> {
         return CupertinoDropdownSearch<T>(
           items: (filter, loadProps) => items,
           itemAsString: itemAsString,
+          compareFn: compareFn,
           selectedItem: selectedItem,
           onSelected: onSelected,
           enabled: enabled,
@@ -255,6 +257,7 @@ class _SelectStateState extends State<SelectState> {
           context: context,
           items: (filter, loadProps) => items,
           itemAsString: itemAsString,
+          compareFn: compareFn,
           selectedItem: selectedItem,
           onSelected: onSelected,
           enabled: enabled,
@@ -274,6 +277,7 @@ class _SelectStateState extends State<SelectState> {
         return DropdownSearch<T>(
           items: (filter, loadProps) => items,
           itemAsString: itemAsString,
+          compareFn: compareFn,
           selectedItem: selectedItem,
           onSelected: onSelected,
           enabled: enabled,
@@ -301,6 +305,7 @@ class _SelectStateState extends State<SelectState> {
             itemAsString: (item) => widget.showFlag
                 ? "${item.emoji}    ${item.name}"
                 : item.name ?? "",
+            compareFn: (a, b) => a.id == b.id,
             selectedItem: _selectedCountry,
             onSelected: _onCountryChanged,
             hint: widget.countryHint,
@@ -313,6 +318,7 @@ class _SelectStateState extends State<SelectState> {
             context: context,
             items: _states,
             itemAsString: (item) => item.name ?? "",
+            compareFn: (a, b) => a.id == b.id,
             selectedItem: _selectedState,
             onSelected: _onStateChanged,
             hint: widget.stateHint,
@@ -326,6 +332,7 @@ class _SelectStateState extends State<SelectState> {
             context: context,
             items: _cities,
             itemAsString: (item) => item.name ?? "",
+            compareFn: (a, b) => a.id == b.id,
             selectedItem: _selectedCity,
             onSelected: _onCityChanged,
             hint: widget.cityHint,

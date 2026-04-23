@@ -1,0 +1,43 @@
+Ran command: `git add .`
+Ran command: `git commit -m "Request Issue fixed"`
+Ran command: `git push`
+Viewed main.dart:33-62
+
+To publish your updated package to **pub.dev**, follow these steps:
+
+### 1. Validation (Dry Run)
+Before publishing, run a dry run to ensure there are no issues with the package structure, documentation, or formatting.
+```powershell
+flutter pub publish --dry-run
+```
+*Check the output for any warnings or errors. Since we've updated the README, CHANGELOG, and pubspec, it should be ready.*
+
+### 2. Check for Formatting
+It's good practice to ensure all files are formatted according to Dart standards:
+```powershell
+dart format .
+```
+
+### 3. Verification with Analysis
+Ensure there are no hidden analysis issues:
+```powershell
+flutter analyze
+```
+
+### 4. Publish to pub.dev
+Once everything looks good, run the following command to publish.
+```powershell
+flutter pub publish
+```
+
+---
+
+### Important Steps during Publishing:
+1.  **Authentication**: If it's your first time or your session expired, the terminal will provide a URL. Open it in your browser, log in with your Google account associated with the package, and grant permission.
+2.  **Confirmation**: The terminal will ask `Do you want to publish country_state_city_picker 2.0.0? (y/n)`. Type **`y`** and hit Enter.
+3.  **Success**: Once uploaded, it usually takes a few minutes for the new version to appear on the [pub.dev](https://pub.dev/packages/country_state_city_picker) page.
+
+> [!TIP]
+> Since this is a major version jump (**2.0.0**), users will be notified of the breaking changes (like `onChanged` moving to `onSelected` internally via `dropdown_search`). The updated `README.md` and `CHANGELOG.md` we created will help them migrate easily.
+
+Would you like me to run the **dry run** command for you now to check for any potential issues?
